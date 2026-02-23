@@ -1,5 +1,3 @@
-using System;
-
 namespace QuantityMeasurementApp.Models
 {
     public class Length
@@ -13,28 +11,33 @@ namespace QuantityMeasurementApp.Models
             this.unit = unit;
         }
 
-        // Convert everything to base unit (Feet)
-        private double ToFeet()
+        private double ConvertToFeet()
         {
             return value * unit.ToFeetFactor();
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (this == obj)
-                return true;
-
-            if (obj == null || GetType() != obj.GetType())
+            if (obj == null || !(obj is Length))
                 return false;
 
             Length other = (Length)obj;
 
-            return Math.Abs(this.ToFeet() - other.ToFeet()) < 0.0001;
+            return Math.Abs(this.ConvertToFeet() - other.ConvertToFeet()) < 0.0001;
         }
 
         public override int GetHashCode()
         {
-            return ToFeet().GetHashCode();
+            return ConvertToFeet().GetHashCode();
         }
     }
 }
+
+/*
+SUMMARY:
+This class represents a generic length quantity.
+Each length has a value and a unit.
+All values are internally converted to the base unit (Feet) for comparison.
+The Equals() method compares two Length objects after conversion.
+The design ensures scalability and avoids duplication when adding new units.
+*/

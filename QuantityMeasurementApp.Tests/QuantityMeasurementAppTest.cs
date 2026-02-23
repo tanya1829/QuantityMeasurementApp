@@ -126,5 +126,64 @@ namespace QuantityMeasurementApp.Tests
             Length l = new Length(1.0, LengthUnit.Feet);
             Assert.IsTrue(l.Equals(l));
         }
+        //  UC4 - YARDS & CENTIMETERS TEST CASES 
+
+        [TestMethod]
+        public void Length_YardToFeet_Equivalent_ReturnsTrue()
+        {
+            Assert.IsTrue(
+                QuantityMeasurementService.AreLengthEqual(
+                    1.0, LengthUnit.Yards,
+                    3.0, LengthUnit.Feet));
+        }
+
+        [TestMethod]
+        public void Length_YardToInch_Equivalent_ReturnsTrue()
+        {
+            Assert.IsTrue(
+                QuantityMeasurementService.AreLengthEqual(
+                    1.0, LengthUnit.Yards,
+                    36.0, LengthUnit.Inch));
+        }
+
+        [TestMethod]
+        public void Length_CmToInch_Equivalent_ReturnsTrue()
+        {
+            Assert.IsTrue(
+                QuantityMeasurementService.AreLengthEqual(
+                    1.0, LengthUnit.Centimeters,
+                    0.393701, LengthUnit.Inch));
+        }
+
+        [TestMethod]
+        public void Length_CmToFeet_NotEquivalent_ReturnsFalse()
+        {
+            Assert.IsFalse(
+                QuantityMeasurementService.AreLengthEqual(
+                    1.0, LengthUnit.Centimeters,
+                    1.0, LengthUnit.Feet));
+        }
+
+        [TestMethod]
+        public void Length_YardToYard_SameValue_ReturnsTrue()
+        {
+            Assert.IsTrue(
+                QuantityMeasurementService.AreLengthEqual(
+                    2.0, LengthUnit.Yards,
+                    2.0, LengthUnit.Yards));
+        }
     }
 }
+/*
+SUMMARY:
+
+This test class covers UC1 to UC4.
+
+UC1: Tests equality logic for Feet.
+UC2: Tests equality logic for Inches.
+UC3: Tests generic Length comparison including Feet ↔ Inch conversion.
+UC4: Tests extended units Yards and Centimeters with cross-unit conversion.
+
+All comparisons use QuantityMeasurementService,
+which converts values to the base unit (Feet) before checking equality.
+*/
