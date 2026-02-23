@@ -1,6 +1,6 @@
 ﻿using System;
 using QuantityMeasurementApp.Services;
-
+using QuantityMeasurementApp.Models;
 namespace QuantityMeasurementApp
 {
     public class Program
@@ -14,6 +14,7 @@ namespace QuantityMeasurementApp
                 Console.WriteLine("\n===== Quantity Measurement App =====");
                 Console.WriteLine("1. Compare Feet");
                 Console.WriteLine("2. Compare Inches");
+                Console.WriteLine("3. Compare Length ");
                 Console.WriteLine("3. Exit");
                 Console.Write("Enter your choice: ");
 
@@ -28,8 +29,11 @@ namespace QuantityMeasurementApp
                     case 2:
                         CompareInches();
                         break;
-
                     case 3:
+                        CompareLength();
+                        break;
+
+                    case 4:
                         Console.WriteLine("Exiting application...");
                         break;
 
@@ -38,7 +42,7 @@ namespace QuantityMeasurementApp
                         break;
                 }
 
-            } while (choice != 3);
+            } while (choice != 4);
         }
 
         private static void CompareFeet()
@@ -61,8 +65,29 @@ namespace QuantityMeasurementApp
             Console.Write("Enter second value in inches: ");
             double value2 = Convert.ToDouble(Console.ReadLine());
 
-            bool result = QuantityMeasurementService.AreInchesEqual( value1, value2);
+            bool result = QuantityMeasurementService.AreInchesEqual(value1, value2);
             Console.WriteLine("Inches Equal: " + result);
+        }
+        private static void CompareLength()
+        {
+            Console.Write("Enter first value: ");
+            double value1 = Convert.ToDouble(Console.ReadLine());
+
+            Console.Write("Enter first unit (Feet/Inch): ");
+            LengthUnit unit1 = (LengthUnit)Enum.Parse(typeof(LengthUnit), Console.ReadLine(), true);
+
+            Console.Write("Enter second value: ");
+            double value2 = Convert.ToDouble(Console.ReadLine());
+
+            Console.Write("Enter second unit (Feet/Inch): ");
+            LengthUnit unit2 = (LengthUnit)Enum.Parse(typeof(LengthUnit), Console.ReadLine(), true);
+
+            Length l1 = new Length(value1, unit1);
+            Length l2 = new Length(value2, unit2);
+
+            bool result = QuantityMeasurementService. AreLengthEqual( value1,unit1, value2,  unit2);
+
+            Console.WriteLine("Length Equal: " + result);
         }
     }
 }
