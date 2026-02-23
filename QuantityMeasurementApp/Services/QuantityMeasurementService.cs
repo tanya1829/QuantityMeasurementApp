@@ -4,31 +4,46 @@ namespace QuantityMeasurementApp.Services
 {
     public class QuantityMeasurementService
     {
-        // Static method for Feet equality
-        public static bool AreFeetEqual(double value1, double value2)
-        {
-            Feet f1 = new Feet(value1);
-            Feet f2 = new Feet(value2);
-
-            return f1.Equals(f2);
-        }
-
-        // Static method for Inches equality
-        public static bool AreInchesEqual(double value1, double value2)
-        {
-            Inches i1 = new Inches(value1);
-            Inches i2 = new Inches(value2);
-
-            return i1.Equals(i2);
-        }
-
-
-        public static bool AreLengthEqual(double value1, LengthUnit unit1,double value2, LengthUnit unit2)
+        public static bool AreLengthEqual(double value1, LengthUnit unit1,
+                                          double value2, LengthUnit unit2)
         {
             Length l1 = new Length(value1, unit1);
             Length l2 = new Length(value2, unit2);
 
             return l1.Equals(l2);
         }
+
+        public static double Convert(double value,
+                                     LengthUnit sourceUnit,
+                                     LengthUnit targetUnit)
+        {
+            if (!double.IsFinite(value))
+                throw new ArgumentException("Invalid numeric value");
+
+            if (sourceUnit == null || targetUnit == null)
+                throw new ArgumentException("Units cannot be null");
+
+            double valueInFeet = value * sourceUnit.ToFeetFactor();
+
+            return valueInFeet / targetUnit.ToFeetFactor();
+        }
     }
 }
+
+/*
+SUMMARY:
+
+This class now supports UC5 explicit unit-to-unit conversion.
+
+Convert() method:
+1. Validates input value (must be finite).
+2. Normalizes the source value to the base unit (Feet).
+3. Converts from base unit to target unit.
+4. Returns the converted numeric result.
+
+The formula used:
+result = value × (sourceFactor / targetFactor)
+
+Supports Feet, Inch, Yards, and Centimeters.
+Throws ArgumentException for invalid inputs.
+*/

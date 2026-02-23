@@ -15,7 +15,7 @@ namespace QuantityMeasurementApp
                 Console.WriteLine("1. Compare Feet");
                 Console.WriteLine("2. Compare Inches");
                 Console.WriteLine("3. Compare Length ");
-                Console.WriteLine("3. Exit");
+                Console.WriteLine("4. Exit");
                 Console.Write("Enter your choice: ");
 
                 choice = Convert.ToInt32(Console.ReadLine());
@@ -53,10 +53,12 @@ namespace QuantityMeasurementApp
             Console.Write("Enter second value in feet: ");
             double value2 = Convert.ToDouble(Console.ReadLine());
 
-            bool result = QuantityMeasurementService.AreFeetEqual(value1, value2);
+            bool result = QuantityMeasurementService.AreLengthEqual(
+                value1, LengthUnit.Feet,
+                value2, LengthUnit.Feet);
+
             Console.WriteLine("Feet Equal: " + result);
         }
-
         private static void CompareInches()
         {
             Console.Write("Enter first value in inches: ");
@@ -65,7 +67,10 @@ namespace QuantityMeasurementApp
             Console.Write("Enter second value in inches: ");
             double value2 = Convert.ToDouble(Console.ReadLine());
 
-            bool result = QuantityMeasurementService.AreInchesEqual(value1, value2);
+            bool result = QuantityMeasurementService.AreLengthEqual(
+                value1, LengthUnit.Inch,
+                value2, LengthUnit.Inch);
+
             Console.WriteLine("Inches Equal: " + result);
         }
         private static void CompareLength()
@@ -85,7 +90,7 @@ namespace QuantityMeasurementApp
             Length l1 = new Length(value1, unit1);
             Length l2 = new Length(value2, unit2);
 
-            bool result = QuantityMeasurementService. AreLengthEqual( value1,unit1, value2,  unit2);
+            bool result = QuantityMeasurementService.AreLengthEqual(value1, unit1, value2, unit2);
 
             Console.WriteLine("Length Equal: " + result);
         }
