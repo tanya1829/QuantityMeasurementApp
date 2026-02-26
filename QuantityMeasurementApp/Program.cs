@@ -1,8 +1,14 @@
 ﻿using System;
 using QuantityMeasurementApp.Services;
 using QuantityMeasurementApp.Models;
+
 namespace QuantityMeasurementApp
 {
+    /// <summary>
+    /// Console application to compare and convert length units.
+    /// Supports Feet, Inch, Yard and Centimeter.
+    /// Covers UC1 to UC5.
+    /// </summary>
     public class Program
     {
         public static void Main(string[] args)
@@ -14,8 +20,10 @@ namespace QuantityMeasurementApp
                 Console.WriteLine("\n===== Quantity Measurement App =====");
                 Console.WriteLine("1. Compare Feet");
                 Console.WriteLine("2. Compare Inches");
-                Console.WriteLine("3. Compare Length ");
-                Console.WriteLine("4. Exit");
+                Console.WriteLine("3. Compare Length (Any Unit)");
+                Console.WriteLine("4. Convert Length Units");
+                Console.WriteLine("5. Add Length Units");
+                Console.WriteLine("6. Exit");
                 Console.Write("Enter your choice: ");
 
                 choice = Convert.ToInt32(Console.ReadLine());
@@ -29,12 +37,17 @@ namespace QuantityMeasurementApp
                     case 2:
                         CompareInches();
                         break;
+
                     case 3:
                         CompareLength();
                         break;
 
                     case 4:
-                        Console.WriteLine("Exiting application...");
+                        ConvertLength();
+                        break;
+
+                    case 5:
+                        AddLength();
                         break;
 
                     default:
@@ -42,7 +55,7 @@ namespace QuantityMeasurementApp
                         break;
                 }
 
-            } while (choice != 4);
+            } while (choice != 5);
         }
 
         private static void CompareFeet()
@@ -59,6 +72,7 @@ namespace QuantityMeasurementApp
 
             Console.WriteLine("Feet Equal: " + result);
         }
+
         private static void CompareInches()
         {
             Console.Write("Enter first value in inches: ");
@@ -73,26 +87,65 @@ namespace QuantityMeasurementApp
 
             Console.WriteLine("Inches Equal: " + result);
         }
+
         private static void CompareLength()
         {
             Console.Write("Enter first value: ");
             double value1 = Convert.ToDouble(Console.ReadLine());
 
-            Console.Write("Enter first unit (Feet/Inch): ");
+            Console.Write("Enter first unit (Feet/Inch/Yard/Centimeter): ");
             LengthUnit unit1 = (LengthUnit)Enum.Parse(typeof(LengthUnit), Console.ReadLine(), true);
 
             Console.Write("Enter second value: ");
             double value2 = Convert.ToDouble(Console.ReadLine());
 
-            Console.Write("Enter second unit (Feet/Inch): ");
+            Console.Write("Enter second unit (Feet/Inch/Yard/Centimeter): ");
             LengthUnit unit2 = (LengthUnit)Enum.Parse(typeof(LengthUnit), Console.ReadLine(), true);
 
-            Length l1 = new Length(value1, unit1);
-            Length l2 = new Length(value2, unit2);
-
-            bool result = QuantityMeasurementService.AreLengthEqual(value1, unit1, value2, unit2);
+            bool result = QuantityMeasurementService.AreLengthEqual(
+                value1, unit1,
+                value2, unit2);
 
             Console.WriteLine("Length Equal: " + result);
+        }
+
+        private static void ConvertLength()
+        {
+            Console.Write("Enter value to convert: ");
+            double value = Convert.ToDouble(Console.ReadLine());
+
+            Console.WriteLine("Convert FROM (Feet/Inch/Yard/Centimeter): ");
+            LengthUnit fromUnit = (LengthUnit)Enum.Parse(typeof(LengthUnit), Console.ReadLine(), true);
+
+            Console.WriteLine("Convert TO (Feet/Inch/Yard/Centimeter): ");
+            LengthUnit toUnit = (LengthUnit)Enum.Parse(typeof(LengthUnit), Console.ReadLine(), true);
+
+            double result = QuantityMeasurementService.ConvertLength(value, fromUnit, toUnit);
+
+            Console.WriteLine($"Converted Value: {result} {toUnit}");
+        }
+        private static void AddLength()
+        {
+            Console.Write("Enter first value: ");
+            double value1 = Convert.ToDouble(Console.ReadLine());
+
+            Console.Write("Enter first unit (Feet/Inch/Yard/Centimeter): ");
+            LengthUnit unit1 = (LengthUnit)Enum.Parse(typeof(LengthUnit), Console.ReadLine(), true);
+
+            Console.Write("Enter second value: ");
+            double value2 = Convert.ToDouble(Console.ReadLine());
+
+            Console.Write("Enter second unit (Feet/Inch/Yard/Centimeter): ");
+            LengthUnit unit2 = (LengthUnit)Enum.Parse(typeof(LengthUnit), Console.ReadLine(), true);
+
+            // Create Length objects
+            Length length1 = new Length(value1, unit1);
+            Length length2 = new Length(value2, unit2);
+
+            // Perform Addition
+            Length result = length1.Add(length2);
+
+            Console.WriteLine($"Result: {result}");
         }
     }
 }

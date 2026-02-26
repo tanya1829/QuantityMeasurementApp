@@ -27,6 +27,28 @@ namespace QuantityMeasurementApp.Services
 
             return valueInFeet / targetUnit.ToFeetFactor();
         }
+        public static double ConvertLength(double value, LengthUnit fromUnit, LengthUnit toUnit)
+        {
+            // Convert everything to base unit (Feet)
+            double valueInFeet = fromUnit switch
+            {
+                LengthUnit.Feet => value,
+                LengthUnit.Inch => value / 12,
+                LengthUnit.Yard => value * 3,
+                LengthUnit.Centimeter => value / 30.48,
+                _ => throw new ArgumentException("Invalid unit")
+            };
+
+            // Convert from Feet to target unit
+            return toUnit switch
+            {
+                LengthUnit.Feet => valueInFeet,
+                LengthUnit.Inch => valueInFeet * 12,
+                LengthUnit.Yard => valueInFeet / 3,
+                LengthUnit.Centimeter => valueInFeet * 30.48,
+                _ => throw new ArgumentException("Invalid unit")
+            };
+        }
     }
 }
 
