@@ -4,31 +4,33 @@ namespace QuantityMeasurementApp.Services
 {
     public class QuantityMeasurementService
     {
-        // Static method for Feet equality
-        public static bool AreFeetEqual(double value1, double value2)
+        // Method to check equality of two feet objects
+        
+        public static bool AreFeetEqual(double v1, double v2)
         {
-            Feet f1 = new Feet(value1);
-            Feet f2 = new Feet(value2);
+            Feet f1 = new Feet(v1);
+            Feet f2 = new Feet(v2);
 
             return f1.Equals(f2);
         }
 
-        // Static method for Inches equality
-        public static bool AreInchesEqual(double value1, double value2)
+         // Static method to compare two inches values
+        public static bool AreInchesEqual(double v1, double v2)
         {
-            Inches i1 = new Inches(value1);
-            Inches i2 = new Inches(value2);
+            Inches i1 = new Inches(v1);
+            Inches i2 = new Inches(v2);
 
             return i1.Equals(i2);
         }
 
-
-        public static bool AreLengthEqual(double value1, LengthUnit unit1,double value2, LengthUnit unit2)
+     
+        // Generic equality check
+        public static bool AreLengthEqual(double v1, LengthUnit u1, double v2, LengthUnit u2)
         {
-            Length l1 = new Length(value1, unit1);
-            Length l2 = new Length(value2, unit2);
+            QuantityLength q1 = new QuantityLength(v1, u1);
+            QuantityLength q2 = new QuantityLength(v2, u2);
 
-            return l1.Equals(l2);
+            return q1.Equals(q2);
         }
     }
-}
+    }
