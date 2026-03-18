@@ -26,15 +26,15 @@ namespace QuantityMeasurementApp.Controller
             bool isRunning = true;
             while (isRunning)
             {
-                System.Console.WriteLine("\\n══════════════════════════════");
-                System.Console.WriteLine("║    QUANTITY MEASUREMENT APP    ║");
-                System.Console.WriteLine("\n════════════════════════════════");
-                System.Console.WriteLine(" 1  Length Operations             ");
-                System.Console.WriteLine(" 2  Weight Operations             ");
-                System.Console.WriteLine(" 3  Volume Operations             ");
-                System.Console.WriteLine(" 4  Temperature Operations        ");
-                System.Console.WriteLine(" 5  Exit                          ");
-                System.Console.WriteLine("");
+                System.Console.WriteLine("   ╔════════════════════════════════════╗");
+                System.Console.WriteLine("   ║    QUANTITY MEASUREMENT APP        ║");
+                System.Console.WriteLine("   ║════════════════════════════════════║ ");
+                System.Console.WriteLine("   ║ 1  Length Operations               ║ ");
+                System.Console.WriteLine("   ║ 2  Weight Operations               ║");
+                System.Console.WriteLine("   ║ 3  Volume Operations               ║ ");
+                System.Console.WriteLine("   ║ 4  Temperature Operations          ║ ");
+                System.Console.WriteLine("   ║ 5  Exit                            ║");
+                System.Console.WriteLine("   ╚════════════════════════════════════╝");
 
                 int choice = ReadInteger("Select option: ");
 
@@ -57,15 +57,15 @@ namespace QuantityMeasurementApp.Controller
 
         private void ShowLengthOperations()
         {
-            System.Console.WriteLine("\n════════════════════════════════════");
-            System.Console.WriteLine("║         LENGTH OPERATIONS          ║");
-            System.Console.WriteLine("\n════════════════════════════════════");
-            System.Console.WriteLine(" 1  Compare Length                    ");
-            System.Console.WriteLine(" 2  Convert Length                    ");
-            System.Console.WriteLine(" 3  Add Length                        ");
-            System.Console.WriteLine(" 4  Subtract Length                   ");
-            System.Console.WriteLine(" 5  Divide Length                     ");
-            System.Console.WriteLine("");
+            System.Console.WriteLine("   ╔════════════════════════════════════╗");
+            System.Console.WriteLine("   ║         LENGTH OPERATIONS          ║");
+            System.Console.WriteLine("   ║════════════════════════════════════║");
+            System.Console.WriteLine("   ║ 1  Compare Length                  ║ ");
+            System.Console.WriteLine("   ║ 2  Convert Length                  ║ ");
+            System.Console.WriteLine("   ║ 3  Add Length                      ║ ");
+            System.Console.WriteLine("   ║ 4  Subtract Length                 ║ ");
+            System.Console.WriteLine("   ║ 5  Divide Length                   ║ ");
+            System.Console.WriteLine("   ╚════════════════════════════════════╝");
 
             int option = ReadInteger("Select operation: ");
 
