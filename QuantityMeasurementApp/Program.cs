@@ -1,16 +1,13 @@
-﻿using QuantityMeasurementApp.Menu;
+﻿using QuantityMeasurementApp.Controller;
 
 namespace QuantityMeasurementApp
 {
-    /// <summary>
-    /// Application entry point.
-    /// </summary>
     public class Program
     {
         public static void Main(string[] args)
         {
-            QuantityMeasurementMenu menu = new QuantityMeasurementMenu();
-            menu.Show();
+            var controller = new QuantityMeasurementController();
+            controller.ShowMainMenu();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 
+
 /// <summary>
 /// Domain model representing measurement units and quantity logic.
 /// Used by the service layer for calculations.
@@ -33,7 +34,7 @@ namespace QuantityMeasurementApp.ModelLayer.Models
             // Safe casting
             Inches other = (Inches)obj;
 
-            
+
             return this.value.CompareTo(other.value) == 0;
         }
 
