@@ -1,5 +1,5 @@
-﻿using QuantityMeasurementApp.ModelLayer.Models;
-
+﻿using QuantityMeasurementApp.ModelLayer.Units;
+using QuantityMeasurementApp.ModelLayer.Enums;
 namespace QuantityMeasurementApp.ModelLayer.DTO
 {
     public class QuantityDTO

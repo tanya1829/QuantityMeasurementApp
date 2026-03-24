@@ -1,12 +1,14 @@
 using System;
 using QuantityMeasurementApp.BusinessLayer.Services;
+using QuantityMeasurementApp.ModelLayer.Enums;
+using QuantityMeasurementApp.RepoLayer.Persistence;
 
 /// <summary>
 /// Domain model representing measurement units and quantity logic.
 /// Used by the service layer for calculations.
 /// </summary>
 
-namespace QuantityMeasurementApp.ModelLayer.Models
+namespace QuantityMeasurementApp.ModelLayer.Units
 {
     /// <summary>
     /// Generic Quantity class supporting multiple measurement categories.

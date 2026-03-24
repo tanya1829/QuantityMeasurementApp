@@ -2,8 +2,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QuantityMeasurementApp.BusinessLayer.Services;
 using QuantityMeasurementApp.ModelLayer.DTO;
 using QuantityMeasurementApp.ModelLayer.Entities;
-using QuantityMeasurementApp.ModelLayer.Models;
-using QuantityMeasurementApp.RepoLayer.Repositories;
+using QuantityMeasurementApp.ModelLayer.Enums;
+using QuantityMeasurementApp.ModelLayer.Units;
+using QuantityMeasurementApp.RepoLayer.Persistence;
 
 namespace QuantityMeasurementApp.Tests
 {

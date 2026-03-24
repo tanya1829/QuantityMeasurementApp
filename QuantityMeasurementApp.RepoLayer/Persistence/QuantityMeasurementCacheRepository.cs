@@ -3,7 +3,7 @@ using QuantityMeasurementApp.RepoLayer.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace QuantityMeasurementApp.RepoLayer.Repositories
+namespace QuantityMeasurementApp.RepoLayer.Persistence
 {
     public class QuantityMeasurementCacheRepository : IQuantityMeasurementRepository
     {

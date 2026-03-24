@@ -9,27 +9,31 @@ namespace QuantityMeasurementApp.API.Controllers
     [Route("api/v1/auth")]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly IAuthService          _authService;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, ILogger<AuthController> logger)
         {
             _authService = authService;
+            _logger      = logger;
         }
 
-        /// <summary>Register a new user</summary>
+        /// <summary>Register a new user — returns no token, use login to get token</summary>
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDTO request)
         {
+            _logger.LogInformation("Register request for: {Email}", request.Email);
             var result = await _authService.RegisterAsync(request);
             return Ok(result);
         }
 
-        /// <summary>Login and receive JWT tokens</summary>
+        /// <summary>Login — returns accessToken and refreshToken</summary>
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
+            _logger.LogInformation("Login request for: {Email}", request.Email);
             var result = await _authService.LoginAsync(request);
             return Ok(result);
         }
@@ -39,11 +43,12 @@ namespace QuantityMeasurementApp.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDTO request)
         {
+            _logger.LogInformation("Refresh token request");
             var result = await _authService.RefreshTokenAsync(request);
             return Ok(result);
         }
 
-        /// <summary>Revoke refresh token (logout)</summary>
+        /// <summary>Logout — revokes refresh token and blacklists access token</summary>
         [HttpPost("revoke")]
         [Authorize]
         public async Task<IActionResult> Revoke()
@@ -56,7 +61,13 @@ namespace QuantityMeasurementApp.API.Controllers
             if (string.IsNullOrEmpty(email))
                 return Unauthorized();
 
-            await _authService.RevokeAsync(email);
+            string? rawToken = Request.Headers["Authorization"]
+                .ToString()
+                .Replace("Bearer ", "", StringComparison.OrdinalIgnoreCase)
+                .Trim();
+
+            _logger.LogInformation("Revoke request for: {Email}", email);
+            await _authService.RevokeAsync(email, rawToken);
             return NoContent();
         }
 
@@ -65,14 +76,18 @@ namespace QuantityMeasurementApp.API.Controllers
         [Authorize]
         public IActionResult Me()
         {
+            var email = User.Claims.FirstOrDefault(c =>
+                c.Type == System.Security.Claims.ClaimTypes.Email ||
+                c.Type == "email")?.Value;
+
+            _logger.LogInformation("Me request for: {Email}", email);
+
             return Ok(new
             {
                 Id       = User.Claims.FirstOrDefault(c =>
                                c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value,
                 Username = User.Identity?.Name,
-                Email    = User.Claims.FirstOrDefault(c =>
-                               c.Type == System.Security.Claims.ClaimTypes.Email ||
-                               c.Type == "email")?.Value,
+                Email    = email,
                 Role     = User.Claims.FirstOrDefault(c =>
                                c.Type == System.Security.Claims.ClaimTypes.Role)?.Value
             });

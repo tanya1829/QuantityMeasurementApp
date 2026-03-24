@@ -1,8 +1,9 @@
 using QuantityMeasurementApp.BusinessLayer.Interfaces;
 using QuantityMeasurementApp.BusinessLayer.Services;
 using QuantityMeasurementApp.ModelLayer.DTO;
-using QuantityMeasurementApp.ModelLayer.Models;
-using QuantityMeasurementApp.RepoLayer.Repositories;
+using QuantityMeasurementApp.ModelLayer.Units;
+using QuantityMeasurementApp.RepoLayer.Persistence;
+using QuantityMeasurementApp.ModelLayer.Enums;
 using System;
 
 namespace QuantityMeasurementApp.Controller

@@ -6,7 +6,7 @@ using QuantityMeasurementApp.RepoLayer.Utilities;
 using System;
 using System.Collections.Generic;
 
-namespace QuantityMeasurementApp.RepoLayer.Repositories
+namespace QuantityMeasurementApp.RepoLayer.Persistence
 {
     public class QuantityMeasurementDatabaseRepository : IQuantityMeasurementRepository
     {

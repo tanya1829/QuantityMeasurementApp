@@ -8,5 +8,6 @@ namespace QuantityMeasurementApp.BusinessLayer.Interfaces
         Task<AuthResponseDTO> LoginAsync(LoginRequestDTO request);
         Task<AuthResponseDTO> RefreshTokenAsync(RefreshTokenRequestDTO request);
         Task                  RevokeAsync(string email);
+        Task                  RevokeAsync(string email, string? accessToken);
     }
 }

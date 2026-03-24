@@ -1,12 +1,9 @@
 using System;
-
-
 /// <summary>
-/// Domain model representing measurement units and quantity logic.
+/// Domain model representingmeasurement units and quantity logic.
 /// Used by the service layer for calculations.
 /// </summary>
-
-namespace QuantityMeasurementApp.ModelLayer.Models
+namespace QuantityMeasurementApp.ModelLayer.Units
 {
     // Class representing Inches measurement
     public class Inches

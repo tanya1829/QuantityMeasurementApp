@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using QuantityMeasurementApp.ModelLayer.Entities;
-using QuantityMeasurementApp.RepoLayer.Data;
+using QuantityMeasurementApp.RepoLayer.Context;
 using QuantityMeasurementApp.RepoLayer.Interfaces;
 
-namespace QuantityMeasurementApp.RepoLayer.Repositories
+namespace QuantityMeasurementApp.RepoLayer.Persistence
 {
     public class QuantityMeasurementEfRepository : IQuantityMeasurementRepository
     {

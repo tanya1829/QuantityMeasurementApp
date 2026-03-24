@@ -7,13 +7,16 @@ using QuantityMeasurementApp.API.Middleware;
 using QuantityMeasurementApp.API.Settings;
 using QuantityMeasurementApp.BusinessLayer.Interfaces;
 using QuantityMeasurementApp.BusinessLayer.Services;
-using QuantityMeasurementApp.RepoLayer.Data;
+using QuantityMeasurementApp.RepoLayer.Cache;
+using QuantityMeasurementApp.RepoLayer.Auth;
+using QuantityMeasurementApp.RepoLayer.Context;
 using QuantityMeasurementApp.RepoLayer.Interfaces;
-using QuantityMeasurementApp.RepoLayer.Repositories;
+using QuantityMeasurementApp.RepoLayer.Persistence;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ── JWT Settings ──────────────────────────────────────────────────────────────
+// ── JWT Settings ──────────────────────────────────────────────────────
 var jwtSettings = builder.Configuration
     .GetSection("JwtSettings")
     .Get<JwtSettings>()
@@ -35,10 +38,17 @@ var jwtService = new JwtService(
     jwtSettings.RefreshTokenExpiryDays);
 builder.Services.AddSingleton(jwtService);
 
-// ── Controllers ───────────────────────────────────────────────────────────────
+// ── Redis ─────────────────────────────────────────────────────────────────
+var redisConnection = builder.Configuration.GetConnectionString("Redis")
+    ?? "localhost:6379,abortConnect=false";
+builder.Services.AddSingleton<IConnectionMultiplexer>(
+    ConnectionMultiplexer.Connect(redisConnection));
+builder.Services.AddSingleton<RedisService>();
+
+// ── Controllers ───────────────────────────────────────────────────────────
 builder.Services.AddControllers();
 
-// ── Swagger ───────────────────────────────────────────────────────────────────
+// ── Swagger with JWT support ──────────────────────────────────────────────
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -56,7 +66,7 @@ builder.Services.AddSwaggerGen(options =>
         Scheme       = "Bearer",
         BearerFormat = "JWT",
         In           = ParameterLocation.Header,
-        Description  = "Enter your JWT token. Example: Bearer eyJhbGci..."
+        Description  = "Enter your JWT token only (without Bearer prefix)"
     });
 
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -75,23 +85,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// ── Database ──────────────────────────────────────────────────────────────────
-bool useInMemory = builder.Configuration
-    .GetValue<bool>("AppSettings:UseInMemoryDatabase");
+// ── SQL Server Database ───────────────────────────────────────────────────
+builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
-if (useInMemory)
-{
-    builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
-        options.UseInMemoryDatabase("QuantityMeasurementDb"));
-}
-else
-{
-    builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
-        options.UseSqlServer(
-            builder.Configuration.GetConnectionString("DefaultConnection")));
-}
-
-// ── JWT Authentication ────────────────────────────────────────────────────────
+// ── JWT Authentication ────────────────────────────────────────────────────
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -115,7 +114,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// ── Repositories + Services ───────────────────────────────────────────────────
+// ── Repositories + Services ───────────────────────────────────────────────
 builder.Services.AddScoped<IAuthRepository,                AuthRepository>();
 builder.Services.AddScoped<IAuthService,                   AuthServiceImpl>();
 builder.Services.AddScoped<IQuantityMeasurementRepository, QuantityMeasurementEfRepository>();
@@ -123,15 +122,15 @@ builder.Services.AddScoped<IQuantityMeasurementService,    QuantityMeasurementSe
 
 var app = builder.Build();
 
-// ── Auto-create DB tables ─────────────────────────────────────────────────────
+// ── Run EF Core Migrations automatically ─────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider
         .GetRequiredService<QuantityMeasurementDbContext>();
-    db.Database.EnsureCreated();
+    db.Database.Migrate();
 }
 
-// ── Middleware pipeline ───────────────────────────────────────────────────────
+// ── Middleware pipeline ───────────────────────────────────────────────────
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseSwagger();

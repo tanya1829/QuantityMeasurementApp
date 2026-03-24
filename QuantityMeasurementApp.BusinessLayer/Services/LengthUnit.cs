@@ -1,5 +1,6 @@
 using System;
-using QuantityMeasurementApp.ModelLayer.Models;
+using QuantityMeasurementApp.ModelLayer.Units;
+using QuantityMeasurementApp.ModelLayer.Enums;
 
 /// <summary>
 /// Service class containing logic for length unit conversions.

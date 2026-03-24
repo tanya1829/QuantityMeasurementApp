@@ -1,4 +1,4 @@
-namespace QuantityMeasurementApp.ModelLayer.Entities
+﻿namespace QuantityMeasurementApp.ModelLayer.Entities
 {
     public class UserEntity
     {
@@ -9,6 +9,8 @@ namespace QuantityMeasurementApp.ModelLayer.Entities
         public string    Role                { get; set; } = "User";
         public string?   RefreshToken        { get; set; }
         public DateTime? RefreshTokenExpiry  { get; set; }
+        public bool      IsActive            { get; set; } = true;
         public DateTime  CreatedAt           { get; set; } = DateTime.UtcNow;
+        public DateTime  UpdatedAt           { get; set; } = DateTime.UtcNow;
     }
 }
