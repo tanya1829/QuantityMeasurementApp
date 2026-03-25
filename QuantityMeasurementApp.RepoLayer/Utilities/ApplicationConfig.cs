@@ -11,7 +11,6 @@ namespace QuantityMeasurementApp.RepoLayer.Utilities
 
         private ApplicationConfig()
         {
-            // Look in running directory first, then base directory
             string path = Path.Combine(
                 AppDomain.CurrentDomain.BaseDirectory, "appsettings.json");
 
@@ -33,7 +32,6 @@ namespace QuantityMeasurementApp.RepoLayer.Utilities
 
         public string GetConnectionString()
         {
-            // System property override takes precedence
             string env = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
             if (!string.IsNullOrWhiteSpace(env)) return env;
 
@@ -51,16 +49,17 @@ namespace QuantityMeasurementApp.RepoLayer.Utilities
                 .GetString();
         }
 
-        public string GetRepositoryType()
+        // CHANGED: replaces GetRepositoryType()
+        // Reads "StorageMode" from appsettings.json — returns "database" or "cache"
+        public string GetStorageMode()
         {
-            // System property override takes precedence
-            string env = Environment.GetEnvironmentVariable("REPOSITORY_TYPE");
+            string env = Environment.GetEnvironmentVariable("STORAGE_MODE");
             if (!string.IsNullOrWhiteSpace(env)) return env.ToLower();
 
             return _config.RootElement
                 .GetProperty("AppSettings")
-                .GetProperty("RepositoryType")
-                .GetString() ?? "database";
+                .GetProperty("StorageMode")
+                .GetString()?.ToLower() ?? "database";
         }
 
         public int GetMaxPoolSize()
