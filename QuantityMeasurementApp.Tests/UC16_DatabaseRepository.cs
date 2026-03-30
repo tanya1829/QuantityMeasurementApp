@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using QuantityMeasurementApp.ModelLayer.Entities;
-using QuantityMeasurementApp.ModelLayer.Models;
+
+using QuantityMeasurementApp.ModelLayer.Enums;
 using QuantityMeasurementApp.BusinessLayer.Services;
 using QuantityMeasurementApp.ModelLayer.DTO;
 using QuantityMeasurementApp.RepoLayer.Repositories;

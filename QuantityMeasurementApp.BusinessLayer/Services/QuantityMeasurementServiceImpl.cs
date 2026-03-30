@@ -2,6 +2,7 @@ using QuantityMeasurementApp.BusinessLayer.Interfaces;
 using QuantityMeasurementApp.ModelLayer.DTO;
 using QuantityMeasurementApp.ModelLayer.Entities;
 using QuantityMeasurementApp.ModelLayer.Models;
+using QuantityMeasurementApp.ModelLayer.Enums;
 using QuantityMeasurementApp.RepoLayer.Interfaces;
 using System.Collections.Generic;
 

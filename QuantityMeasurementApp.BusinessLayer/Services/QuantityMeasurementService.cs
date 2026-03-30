@@ -1,5 +1,5 @@
 using QuantityMeasurementApp.ModelLayer.DTO;
-using QuantityMeasurementApp.ModelLayer.Models;
+using QuantityMeasurementApp.ModelLayer.Enums;
 using QuantityMeasurementApp.RepoLayer.Repositories;
 
 namespace QuantityMeasurementApp.BusinessLayer.Services
@@ -17,7 +17,6 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
         {
             var q1 = new QuantityDTO(a, LengthEnum.FEET);
             var q2 = new QuantityDTO(b, LengthEnum.FEET);
-
             return service.Compare(q1, q2);
         }
 
@@ -25,7 +24,6 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
         {
             var q1 = new QuantityDTO(a, LengthEnum.INCHES);
             var q2 = new QuantityDTO(b, LengthEnum.INCHES);
-
             return service.Compare(q1, q2);
         }
 
@@ -33,16 +31,13 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
         {
             var q1 = new QuantityDTO(v1, u1);
             var q2 = new QuantityDTO(v2, u2);
-
             return service.Compare(q1, q2);
         }
 
         public static double ConvertLength(double value, LengthEnum from, LengthEnum to)
         {
-            var q = new QuantityDTO(value, from);
-
+            var q      = new QuantityDTO(value, from);
             var result = service.Convert(q, to);
-
             return result.Value;
         }
 
@@ -50,7 +45,6 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
         {
             var q1 = new QuantityDTO(v1, u1);
             var q2 = new QuantityDTO(v2, u2);
-
             return service.Add(q1, q2, u1);
         }
 
@@ -58,7 +52,6 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
         {
             var q1 = new QuantityDTO(v1, u1);
             var q2 = new QuantityDTO(v2, u2);
-
             return service.Add(q1, q2, target);
         }
     }

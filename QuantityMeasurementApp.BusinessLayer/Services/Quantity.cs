@@ -1,5 +1,7 @@
 using System;
 using QuantityMeasurementApp.BusinessLayer.Services;
+using QuantityMeasurementApp.ModelLayer.Enums; 
+using QuantityMeasurementApp.ModelLayer.Models;
 
 /// <summary>
 /// Domain model representing measurement units and quantity logic.
