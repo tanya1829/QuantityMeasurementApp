@@ -36,15 +36,15 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
                 throw new System.InvalidOperationException("Email is already registered.");
             }
 
-            if (await _authRepo.UsernameExistsAsync(request.Username))
+            if (await _authRepo.UsernameExistsAsync(request.Name))
             {
-                _logger.LogWarning("Register failed - username already taken: {Username}", request.Username);
+                _logger.LogWarning("Register failed - username already taken: {Name}", request.Name);
                 throw new System.InvalidOperationException("Username is already taken.");
             }
 
             var user = new UserEntity
             {
-                Username     = request.Username.Trim(),
+                Username     = request.Name.Trim(),
                 Email        = request.Email.Trim().ToLower(),
                 PasswordHash = PasswordHasher.Hash(request.Password),
                 Role         = request.Role?.Equals("Admin", StringComparison.OrdinalIgnoreCase) == true ? "Admin" : "User"
@@ -58,10 +58,10 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
 
             return new AuthResponseDTO
             {
-                Username = user.Username,
-                Email    = user.Email,
-                Role     = user.Role,
-                Message  = "Registration successful. Please login to get your token."
+                Name    = user.Username,
+                Email   = user.Email,
+                Role    = user.Role,
+                Message = "Registration successful. Please login to get your token."
             };
         }
 
@@ -100,7 +100,7 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
                 AccessToken       = accessToken,
                 RefreshToken      = refreshToken,
                 AccessTokenExpiry = DateTime.UtcNow.AddMinutes(60),
-                Username          = user.Username,
+                Name              = user.Username,
                 Email             = user.Email,
                 Role              = user.Role,
                 Message           = "Login successful."
@@ -152,7 +152,7 @@ namespace QuantityMeasurementApp.BusinessLayer.Services
                 AccessToken       = newAccessToken,
                 RefreshToken      = newRefreshToken,
                 AccessTokenExpiry = DateTime.UtcNow.AddMinutes(60),
-                Username          = user.Username,
+                Name              = user.Username,
                 Email             = user.Email,
                 Role              = user.Role,
                 Message           = "Token refreshed successfully."
