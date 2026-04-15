@@ -88,7 +88,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // ── SQL Server Database ───────────────────────────────────────────────────
 builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
-    options.UseNpgsql(
+    options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // ── JWT Authentication ────────────────────────────────────────────────────
@@ -124,13 +124,21 @@ builder.Services.AddScoped<IQuantityMeasurementService,    QuantityMeasurementSe
 var app = builder.Build();
 
 // ── Run EF Core Migrations automatically ─────────────────────────────────
+// ── Run EF Core Migrations automatically ─────────────────────────────────
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider
-        .GetRequiredService<QuantityMeasurementDbContext>();
-    db.Database.Migrate();
+    try
+    {
+        var db = scope.ServiceProvider
+            .GetRequiredService<QuantityMeasurementDbContext>();
+        db.Database.Migrate();
+    }
+    catch (Exception ex)
+    {
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogWarning($"Migration failed: {ex.Message}. Continuing anyway...");
+    }
 }
-
 // ── Middleware pipeline ───────────────────────────────────────────────────
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
