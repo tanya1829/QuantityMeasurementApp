@@ -14,6 +14,7 @@ using QuantityMeasurementApp.RepoLayer.Interfaces;
 using QuantityMeasurementApp.RepoLayer.Persistence;
 using StackExchange.Redis;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // ── JWT Settings ──────────────────────────────────────────────────────
@@ -87,7 +88,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // ── SQL Server Database ───────────────────────────────────────────────────
 builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
-    options.UseSqlServer(
+    options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // ── JWT Authentication ────────────────────────────────────────────────────
