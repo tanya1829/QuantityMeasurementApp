@@ -36,8 +36,8 @@ namespace QuantityMeasurementApp.RepoLayer.Context
                 entity.Property(e => e.PasswordHash).IsRequired();
                 entity.Property(e => e.Role).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.IsActive).HasDefaultValue(true);
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETUTCDATE()");
-                entity.Property(e => e.UpdatedAt).HasDefaultValueSql("GETUTCDATE()");
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("NOW()");
+                entity.Property(e => e.UpdatedAt).HasDefaultValueSql("NOW()");
                 entity.HasIndex(e => e.Email).IsUnique();
                 entity.HasIndex(e => e.Username).IsUnique();
             });

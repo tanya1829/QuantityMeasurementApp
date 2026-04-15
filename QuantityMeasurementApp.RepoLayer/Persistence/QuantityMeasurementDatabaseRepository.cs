@@ -1,10 +1,8 @@
-using Microsoft.Data.SqlClient;
+using Npgsql;
 using QuantityMeasurementApp.Exception;
 using QuantityMeasurementApp.ModelLayer.Entities;
 using QuantityMeasurementApp.RepoLayer.Interfaces;
 using QuantityMeasurementApp.RepoLayer.Utilities;
-using System;
-using System.Collections.Generic;
 
 namespace QuantityMeasurementApp.RepoLayer.Persistence
 {
@@ -15,7 +13,6 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
         public QuantityMeasurementDatabaseRepository(bool useTestDb = false)
         {
             var config = ApplicationConfig.GetInstance();
-
             _connectionString = useTestDb
                 ? config.GetTestConnectionString()
                 : config.GetConnectionString();
@@ -27,26 +24,21 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
         {
             try
             {
-                using var conn = new SqlConnection(_connectionString);
+                using var conn = new NpgsqlConnection(_connectionString);
                 conn.Open();
 
                 string sql = @"
-                    IF NOT EXISTS (
-                        SELECT * FROM sysobjects 
-                        WHERE name='quantity_measurement_entity' AND xtype='U')
-                    BEGIN
-                        CREATE TABLE quantity_measurement_entity (
-                            id           NVARCHAR(50)   NOT NULL PRIMARY KEY,
-                            operation    NVARCHAR(50)   NOT NULL,
-                            operand_one  NVARCHAR(200)  NULL,
-                            operand_two  NVARCHAR(200)  NULL,
-                            result       NVARCHAR(200)  NULL,
-                            measure_type NVARCHAR(50)   NULL,
-                            created_at   DATETIME       DEFAULT GETDATE()
-                        );
-                    END";
+                    CREATE TABLE IF NOT EXISTS quantity_measurement_entity (
+                        id           VARCHAR(50)   NOT NULL PRIMARY KEY,
+                        operation    VARCHAR(50)   NOT NULL,
+                        operand_one  VARCHAR(200)  NULL,
+                        operand_two  VARCHAR(200)  NULL,
+                        result       VARCHAR(200)  NULL,
+                        measure_type VARCHAR(50)   NULL,
+                        created_at   TIMESTAMP     DEFAULT NOW()
+                    )";
 
-                using var cmd = new SqlCommand(sql, conn);
+                using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.ExecuteNonQuery();
             }
             catch (System.Exception ex)
@@ -59,14 +51,14 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
         {
             try
             {
-                using var conn = new SqlConnection(_connectionString);
+                using var conn = new NpgsqlConnection(_connectionString);
                 conn.Open();
 
                 var sql = @"INSERT INTO quantity_measurement_entity
                             (id, operation, operand_one, operand_two, result, measure_type)
                             VALUES (@id, @op, @o1, @o2, @res, @mt)";
 
-                using var cmd = new SqlCommand(sql, conn);
+                using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@id",  entity.Id.ToString());
                 cmd.Parameters.AddWithValue("@op",  entity.Operation);
                 cmd.Parameters.AddWithValue("@o1",  entity.OperandOne);
@@ -86,14 +78,14 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
             var list = new List<QuantityMeasurementEntity>();
             try
             {
-                using var conn = new SqlConnection(_connectionString);
+                using var conn = new NpgsqlConnection(_connectionString);
                 conn.Open();
 
                 var sql = @"SELECT id, operation, operand_one, operand_two, result, measure_type
                             FROM quantity_measurement_entity
                             ORDER BY created_at DESC";
 
-                using var cmd    = new SqlCommand(sql, conn);
+                using var cmd    = new NpgsqlCommand(sql, conn);
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
                     list.Add(MapRow(reader));
@@ -110,7 +102,7 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
             var list = new List<QuantityMeasurementEntity>();
             try
             {
-                using var conn = new SqlConnection(_connectionString);
+                using var conn = new NpgsqlConnection(_connectionString);
                 conn.Open();
 
                 var sql = @"SELECT id, operation, operand_one, operand_two, result, measure_type
@@ -118,7 +110,7 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
                             WHERE operation = @op
                             ORDER BY created_at DESC";
 
-                using var cmd = new SqlCommand(sql, conn);
+                using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@op", operation.ToUpper());
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -136,7 +128,7 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
             var list = new List<QuantityMeasurementEntity>();
             try
             {
-                using var conn = new SqlConnection(_connectionString);
+                using var conn = new NpgsqlConnection(_connectionString);
                 conn.Open();
 
                 var sql = @"SELECT id, operation, operand_one, operand_two, result, measure_type
@@ -144,7 +136,7 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
                             WHERE measure_type = @mt
                             ORDER BY created_at DESC";
 
-                using var cmd = new SqlCommand(sql, conn);
+                using var cmd = new NpgsqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@mt", measureType.ToUpper());
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
@@ -162,7 +154,7 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
             var list = new List<QuantityMeasurementEntity>();
             try
             {
-                using var conn = new SqlConnection(_connectionString);
+                using var conn = new NpgsqlConnection(_connectionString);
                 conn.Open();
 
                 var sql = @"SELECT entity_id, operation, operand_one, operand_two,
@@ -170,7 +162,7 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
                             FROM quantity_measurement_history
                             ORDER BY action_at DESC";
 
-                using var cmd    = new SqlCommand(sql, conn);
+                using var cmd    = new NpgsqlCommand(sql, conn);
                 using var reader = cmd.ExecuteReader();
                 while (reader.Read())
                     list.Add(MapRow(reader));
@@ -186,10 +178,10 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
         {
             try
             {
-                using var conn = new SqlConnection(_connectionString);
+                using var conn = new NpgsqlConnection(_connectionString);
                 conn.Open();
 
-                using var cmd = new SqlCommand(
+                using var cmd = new NpgsqlCommand(
                     "SELECT COUNT(*) FROM quantity_measurement_entity", conn);
                 return Convert.ToInt32(cmd.ExecuteScalar());
             }
@@ -203,14 +195,14 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
         {
             try
             {
-                using var conn = new SqlConnection(_connectionString);
+                using var conn = new NpgsqlConnection(_connectionString);
                 conn.Open();
 
-                using var cmd1 = new SqlCommand(
+                using var cmd1 = new NpgsqlCommand(
                     "DELETE FROM quantity_measurement_history", conn);
                 cmd1.ExecuteNonQuery();
 
-                using var cmd2 = new SqlCommand(
+                using var cmd2 = new NpgsqlCommand(
                     "DELETE FROM quantity_measurement_entity", conn);
                 cmd2.ExecuteNonQuery();
             }
@@ -223,10 +215,10 @@ namespace QuantityMeasurementApp.RepoLayer.Persistence
         public string GetPoolStats()
         {
             int count = GetTotalCount();
-            return $"SQL Server LocalDB | Total records: {count} | DB: QuantityMeasurementDB";
+            return $"PostgreSQL | Total records: {count} | DB: QuantityMeasurementDB";
         }
 
-        private static QuantityMeasurementEntity MapRow(SqlDataReader reader)
+        private static QuantityMeasurementEntity MapRow(NpgsqlDataReader reader)
         {
             return new QuantityMeasurementEntity(
                 reader.GetString(1),
