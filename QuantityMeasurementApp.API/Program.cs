@@ -43,9 +43,19 @@ builder.Services.AddSingleton(jwtService);
 // ── Redis ─────────────────────────────────────────────────────────────────
 var redisConnection = builder.Configuration.GetConnectionString("Redis")
     ?? "localhost:6379,abortConnect=false";
-builder.Services.AddSingleton<IConnectionMultiplexer>(
-    ConnectionMultiplexer.Connect(redisConnection));
-builder.Services.AddSingleton<RedisService>();
+
+try
+{
+    var redis = ConnectionMultiplexer.Connect(redisConnection);
+    builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
+    builder.Services.AddSingleton<RedisService>();
+}
+catch (Exception)
+{
+    // Redis not available - register a null so app still starts
+    builder.Services.AddSingleton<IConnectionMultiplexer>(_ => null!);
+    builder.Services.AddSingleton<RedisService>();
+}
 
 // ── Controllers ───────────────────────────────────────────────────────────
 builder.Services.AddControllers();
