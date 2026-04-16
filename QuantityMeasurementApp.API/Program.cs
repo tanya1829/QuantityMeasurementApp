@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -86,9 +87,9 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// ── SQL Server Database ───────────────────────────────────────────────────
+// ── PostgreSQL Database ───────────────────────────────────────────────────
 builder.Services.AddDbContext<QuantityMeasurementDbContext>(options =>
-    options.UseSqlServer(
+    options.UseNpgsql(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // ── JWT Authentication ────────────────────────────────────────────────────
